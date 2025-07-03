@@ -39,4 +39,8 @@
     u8 shuffleOrderPCH();
     void storeVehicle(u8 vehicle);
     void overworldTranformFix();
+
+    //randomize tracks
+    u8 shuffleTrack(u8 race_id);
+    u8 trackMapConvert(u8 track_map_id);
 #endif

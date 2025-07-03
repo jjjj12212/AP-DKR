@@ -1246,7 +1246,7 @@ u8 transformationMap()
         case MAP_FROSTY_VILLAGE:
         case MAP_SNOWBALL_VALLEY:
         case MAP_WALRUS_COVE:
-        case MAP_CRESCENT_CAVE:
+        case MAP_CRESCENT_ISLAND:
         case MAP_TREASURE_CAVES:
         case MAP_GREENWOOD_VILLAGE:
         case MAP_HAUNTED_WOODS:
@@ -1336,4 +1336,134 @@ void overworldTranformFix()
     {
         overworld_saved_transformation = overworld_cart;
     }
+}
+
+u8 shuffleTrack(u8 race_id)
+{
+    switch (race_id)
+    {
+    case MAP_ANCIENT_LAKE:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_ANCIENT_LAKE].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_ANCIENT_LAKE].actual_track);
+    case MAP_FOSSIL_CANYON:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_FOSSIL_CANYON].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_FOSSIL_CANYON].actual_track);
+    case MAP_JUNGLE_FALLS:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_JUNGLE_FALLS].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_JUNGLE_FALLS].actual_track);
+    case MAP_HOT_TOP_VOLC:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_HOT_TOP_VOLCANO].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_HOT_TOP_VOLCANO].actual_track);
+
+    case MAP_EVERFROST_PEAK:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_EVERFROST_PEAK].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_EVERFROST_PEAK].actual_track);
+    case MAP_WALRUS_COVE:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_WALRUS_COVE].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_WALRUS_COVE].actual_track);
+    case MAP_SNOWBALL_VALLEY:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_SNOWBALL_VALLEY].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_SNOWBALL_VALLEY].actual_track);
+    case MAP_FROSTY_VILLAGE:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_FROSTY_VILLAGE].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_FROSTY_VILLAGE].actual_track);  
+
+    case MAP_WHALE_BAY:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_WHALE_BAY].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_WHALE_BAY].actual_track);
+    case MAP_CRESCENT_ISLAND:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_CRESCENT_ISLAND].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_CRESCENT_ISLAND].actual_track);
+    case MAP_PIRATE_LAGOON:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_PIRATE_LAGOON].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_PIRATE_LAGOON].actual_track);
+    case MAP_TREASURE_CAVES:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_TREASURE_CAVES].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_TREASURE_CAVES].actual_track);   
+
+    case MAP_WINDMILL_PLAINS:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_WINDMILL_PLAINS].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_WINDMILL_PLAINS].actual_track);
+    case MAP_GREENWOOD_VILLAGE:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_GREENWOOD_VILLAGE].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_GREENWOOD_VILLAGE].actual_track);
+    case MAP_BOULDER_CANYON:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_BOULDER_CANYON].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_BOULDER_CANYON].actual_track);
+    case MAP_HAUNTED_WOODS:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_HAUNTED_WOODS].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_HAUNTED_WOODS].actual_track);   
+
+    case MAP_SPACEDUST_ALLEY:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_SPACEDUST_VALLEY].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_SPACEDUST_VALLEY].actual_track);
+    case MAP_DARKMOON_CAVERNS:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_DARKMOON_CAVERNS].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_DARKMOON_CAVERNS].actual_track);
+    case MAP_SPACEPORT_ALPHA:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_SPACEPORT_ALPHA].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_SPACEPORT_ALPHA].actual_track);
+    case MAP_STAR_CITY:
+        ap_memory.pc.mirror_current_race = ap_memory.pc.tracks[TRACK_STAR_CITY].mirror;
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_STAR_CITY].actual_track);  
+    default:
+        ap_memory.pc.mirror_current_race = 0;
+        return 0;
+    }
+    ap_memory.pc.mirror_current_race = 0;
+    return 0;
+}
+
+u8 trackMapConvert(u8 track_map_id)
+{
+    switch (track_map_id)
+    {
+    case TRACK_ANCIENT_LAKE:
+        return MAP_ANCIENT_LAKE;
+    case TRACK_FOSSIL_CANYON:
+        return MAP_FOSSIL_CANYON;
+    case TRACK_JUNGLE_FALLS:
+        return MAP_JUNGLE_FALLS;
+    case TRACK_HOT_TOP_VOLCANO:
+        return MAP_HOT_TOP_VOLC;
+
+    case TRACK_EVERFROST_PEAK:
+        return MAP_EVERFROST_PEAK;
+    case TRACK_WALRUS_COVE:
+        return MAP_WALRUS_COVE;
+    case TRACK_SNOWBALL_VALLEY:
+        return MAP_SNOWBALL_VALLEY;
+    case TRACK_FROSTY_VILLAGE:
+        return MAP_FROSTY_VILLAGE;
+
+    case TRACK_WHALE_BAY:
+        return MAP_WHALE_BAY;
+    case TRACK_CRESCENT_ISLAND:
+        return MAP_CRESCENT_ISLAND;
+    case TRACK_PIRATE_LAGOON:
+        return MAP_PIRATE_LAGOON;
+    case TRACK_TREASURE_CAVES:
+        return MAP_TREASURE_CAVES;
+
+    case TRACK_WINDMILL_PLAINS:
+        return MAP_WINDMILL_PLAINS;
+    case TRACK_GREENWOOD_VILLAGE:
+        return MAP_GREENWOOD_VILLAGE;
+    case TRACK_BOULDER_CANYON:
+        return MAP_BOULDER_CANYON;
+    case TRACK_HAUNTED_WOODS:
+        return MAP_HAUNTED_WOODS;
+
+    case TRACK_SPACEDUST_VALLEY:
+        return MAP_SPACEDUST_ALLEY;
+    case TRACK_DARKMOON_CAVERNS:
+        return MAP_DARKMOON_CAVERNS;
+    case TRACK_SPACEPORT_ALPHA:
+        return MAP_SPACEPORT_ALPHA;
+    case TRACK_STAR_CITY:
+        return MAP_STAR_CITY;
+    default:
+        return 0;
+    }
+    return 0;
 }

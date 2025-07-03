@@ -105,7 +105,7 @@ void checkKeySpawn(u32 *obj_pointer, u32 data_pointer, u8 zero, u8 id)
   {
     dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
   }
-  if(ap_memory.pc.n64_keys_location.island_key && dkr_current_map == MAP_CRESCENT_CAVE)
+  if(ap_memory.pc.n64_keys_location.island_key && dkr_current_map == MAP_CRESCENT_ISLAND)
   {
     dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
   }
@@ -125,7 +125,7 @@ void collectKeyLocation(u32 *obj_pointer, u32 data_pointer, u8 zero, u8 id)
   {
     ap_memory.pc.n64_keys_location.snowflake_key = 1;
   }
-  if(dkr_current_map == MAP_CRESCENT_CAVE)
+  if(dkr_current_map == MAP_CRESCENT_ISLAND)
   {
     ap_memory.pc.n64_keys_location.island_key = 1;
   }
@@ -223,6 +223,21 @@ void overworldTransformRacer( u32 ptr, u8 vehicle_type)
   return dkr_fn_overworld_transform_racer(ptr, vehicle_type);
 }
 
+void setRacetrack(u8 race_id)
+{
+  u8 check_actual_track = shuffleTrack(race_id);
+  if(check_actual_track == 0)
+  {
+    dkr_adv2 = ap_memory.pc.mirror_current_race;
+    return dkr_fn_race_course(race_id);
+  }
+  else
+  {
+    dkr_adv2 = ap_memory.pc.mirror_current_race;
+    return dkr_fn_race_course(check_actual_track);
+  }
+}
+
 u32 inject_hooks() {
   AP_MEMORY_PTR = &ap_memory;
   util_inject(UTIL_INJECT_FUNCTION, 0x80400048, (u32)pre_loop, 1);
@@ -235,11 +250,11 @@ u32 inject_hooks() {
   util_inject(UTIL_INJECT_FUNCTION, 0x80024BD4, (u32)transformRacer, 0); 
   util_inject(UTIL_INJECT_FUNCTION, 0x80039EA8, (u32)overworldTransformRacer, 0); 
 
-
+  util_inject(UTIL_INJECT_FUNCTION, 0x8006CBA8, (u32)setRacetrack, 0); 
 
   util_inject(UTIL_INJECT_RAW, 0x8001A788, 0, 0); //No balloon from winning races
   util_inject(UTIL_INJECT_RAW, 0x8003B670, 0, 0); //No balloon from collecting in overworld
-  util_inject(UTIL_INJECT_RAW, 0x8005A418, 0, 0); //Head Spins if above is in place(checksum??)
+  util_inject(UTIL_INJECT_RAW, 0x8005A418, 0, 0); //Head Spins if above is in place (checksum??)
   util_inject(UTIL_INJECT_RAW, 0x8003DF9C, 0, 0); //don't add key to mem
 
   return 0;

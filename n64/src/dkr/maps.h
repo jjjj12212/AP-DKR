@@ -18,7 +18,7 @@
         MAP_FUTURE_FUN          = 0x23,
         MAP_ANCIENT_LAKE        = 0x05,
         MAP_SNOWBALL_VALLEY     = 0x09,
-        MAP_CRESCENT_CAVE       = 0x0A,
+        MAP_CRESCENT_ISLAND     = 0x0A,
         MAP_BOULDER_CANYON      = 0x13,
         MAP_WIZPIG_BOSS1        = 0x25,
         MAP_WIZPIG_BOSS2        = 0x37,

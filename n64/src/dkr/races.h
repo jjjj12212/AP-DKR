@@ -36,5 +36,13 @@ typedef struct {
     #define dkr_spaceport_alpha_flags (*(dkr_race_status_t*)0x801FCB27) 
     #define dkr_star_city_flags (*(dkr_race_status_t*)0x801FCB6F) 
 
+    typedef void (*dkr_fnt_race_course)(u8 race_id);
+    #define dkr_fn_race_course ((dkr_fnt_race_course)0x8006B250)
+
+    typedef u8 (*dkr_fnt_mirror_race)();
+    #define dkr_fn_mirror_race ((dkr_fnt_mirror_race)0x8009EC70)
+
+    #define dkr_adv2 (*(u8*)0x800DF497)
+
 
 #endif
