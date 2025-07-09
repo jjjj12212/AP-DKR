@@ -9,4 +9,5 @@
     #include "dkr/races.h"
     #include "dkr/items.h"
     #include "dkr/cart.h"
+    #include "dkr/music.h"
 #endif

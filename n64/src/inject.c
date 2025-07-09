@@ -238,6 +238,19 @@ void setRacetrack(u8 race_id)
   }
 }
 
+void setRaceMusic(u8 music_id)
+{
+  u8 check_actual_music = shuffleMusic();
+  if(check_actual_music == 0)
+  {
+    return dkr_fn_music_race(music_id);
+  }
+  else
+  {
+    return dkr_fn_music_race(check_actual_music);
+  }
+}
+
 u32 inject_hooks() {
   AP_MEMORY_PTR = &ap_memory;
   util_inject(UTIL_INJECT_FUNCTION, 0x80400048, (u32)pre_loop, 1);
@@ -251,6 +264,7 @@ u32 inject_hooks() {
   util_inject(UTIL_INJECT_FUNCTION, 0x80039EA8, (u32)overworldTransformRacer, 0); 
 
   util_inject(UTIL_INJECT_FUNCTION, 0x8006CBA8, (u32)setRacetrack, 0); 
+  util_inject(UTIL_INJECT_FUNCTION, 0x8006BD4C, (u32)setRaceMusic, 0);
 
   util_inject(UTIL_INJECT_RAW, 0x8001A788, 0, 0); //No balloon from winning races
   util_inject(UTIL_INJECT_RAW, 0x8003B670, 0, 0); //No balloon from collecting in overworld

@@ -1414,6 +1414,60 @@ u8 shuffleTrack(u8 race_id)
     return 0;
 }
 
+u8 shuffleMusic()
+{
+    switch (dkr_current_map)
+    {
+    case MAP_ANCIENT_LAKE:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_ANCIENT_LAKE].music);
+    case MAP_FOSSIL_CANYON:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_FOSSIL_CANYON].music);
+    case MAP_JUNGLE_FALLS:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_JUNGLE_FALLS].music);
+    case MAP_HOT_TOP_VOLC:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_HOT_TOP_VOLCANO].music);
+
+    case MAP_EVERFROST_PEAK:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_EVERFROST_PEAK].music);
+    case MAP_WALRUS_COVE:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_WALRUS_COVE].music);
+    case MAP_SNOWBALL_VALLEY:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_SNOWBALL_VALLEY].music);
+    case MAP_FROSTY_VILLAGE:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_FROSTY_VILLAGE].music);  
+
+    case MAP_WHALE_BAY:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_WHALE_BAY].music);
+    case MAP_CRESCENT_ISLAND:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_CRESCENT_ISLAND].music);
+    case MAP_PIRATE_LAGOON:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_PIRATE_LAGOON].music);
+    case MAP_TREASURE_CAVES:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_TREASURE_CAVES].music);   
+
+    case MAP_WINDMILL_PLAINS:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_WINDMILL_PLAINS].music);
+    case MAP_GREENWOOD_VILLAGE:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_GREENWOOD_VILLAGE].music);
+    case MAP_BOULDER_CANYON:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_BOULDER_CANYON].music);
+    case MAP_HAUNTED_WOODS:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_HAUNTED_WOODS].music);   
+
+    case MAP_SPACEDUST_ALLEY:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_SPACEDUST_VALLEY].music);
+    case MAP_DARKMOON_CAVERNS:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_DARKMOON_CAVERNS].music);
+    case MAP_SPACEPORT_ALPHA:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_SPACEPORT_ALPHA].music);
+    case MAP_STAR_CITY:
+        return trackMusicConvert(ap_memory.pc.tracks[TRACK_STAR_CITY].music);  
+    default:
+        return 0;
+    }
+    return 0;
+}
+
 u8 trackMapConvert(u8 track_map_id)
 {
     switch (track_map_id)
@@ -1462,6 +1516,60 @@ u8 trackMapConvert(u8 track_map_id)
         return MAP_SPACEPORT_ALPHA;
     case TRACK_STAR_CITY:
         return MAP_STAR_CITY;
+    default:
+        return 0;
+    }
+    return 0;
+}
+
+u8 trackMusicConvert(u8 track_map_id)
+{
+    switch (track_map_id)
+    {
+    case TRACK_ANCIENT_LAKE:
+        return MUSIC_ANCIENT_LAKE;
+    case TRACK_FOSSIL_CANYON:
+        return MUSIC_FOSSIL_CANYON;
+    case TRACK_JUNGLE_FALLS:
+        return MUSIC_JUNGLE_FALLS;
+    case TRACK_HOT_TOP_VOLCANO:
+        return MUSIC_HOT_TOP_VOLC;
+
+    case TRACK_EVERFROST_PEAK:
+        return MUSIC_EVERFROST_PEAK;
+    case TRACK_WALRUS_COVE:
+        return MUSIC_WALRUS_COVE;
+    case TRACK_SNOWBALL_VALLEY:
+        return MUSIC_SNOWBALL_VALLEY;
+    case TRACK_FROSTY_VILLAGE:
+        return MUSIC_FROSTY_VILLAGE;
+
+    case TRACK_WHALE_BAY:
+        return MUSIC_WHALE_BAY;
+    case TRACK_CRESCENT_ISLAND:
+        return MUSIC_CRESCENT_ISLAND;
+    case TRACK_PIRATE_LAGOON:
+        return MUSIC_PIRATE_LAGOON;
+    case TRACK_TREASURE_CAVES:
+        return MUSIC_TREASURE_CAVES;
+
+    case TRACK_WINDMILL_PLAINS:
+        return MUSIC_WINDMILL_PLAINS;
+    case TRACK_GREENWOOD_VILLAGE:
+        return MUSIC_GREENWOOD_VILLAGE;
+    case TRACK_BOULDER_CANYON:
+        return MUSIC_BOULDER_CANYON;
+    case TRACK_HAUNTED_WOODS:
+        return MUSIC_HAUNTED_WOODS;
+
+    case TRACK_SPACEDUST_VALLEY:
+        return MUSIC_SPACEDUST_ALLEY;
+    case TRACK_DARKMOON_CAVERNS:
+        return MUSIC_DARKMOON_CAVERNS;
+    case TRACK_SPACEPORT_ALPHA:
+        return MUSIC_SPACEPORT_ALPHA;
+    case TRACK_STAR_CITY:
+        return MUSIC_STAR_CITY;
     default:
         return 0;
     }

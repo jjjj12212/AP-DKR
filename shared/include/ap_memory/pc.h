@@ -20,6 +20,7 @@ typedef struct {
     struct {
         u8 actual_track;
         u8 mirror;
+        u8 music;
     } tracks[AP_MAX_TRACKS];
     u8 message[67];
     u8 text_queue;

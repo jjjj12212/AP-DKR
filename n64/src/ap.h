@@ -42,5 +42,8 @@
 
     //randomize tracks
     u8 shuffleTrack(u8 race_id);
+    u8 shuffleMusic();
     u8 trackMapConvert(u8 track_map_id);
+    u8 trackMusicConvert(u8 track_map_id);
+
 #endif

@@ -44,5 +44,4 @@ typedef struct {
 
     #define dkr_adv2 (*(u8*)0x800DF497)
 
-
 #endif

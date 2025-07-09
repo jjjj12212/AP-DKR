@@ -1,7 +1,8 @@
 #ifndef AP_MEMORY_TRACKS_H
 #define AP_MEMORY_TRACKS_H
     enum TRACKS {
-        TRACK_ANCIENT_LAKE = 0,
+        TRACK_NONE = 0,
+        TRACK_ANCIENT_LAKE,
         TRACK_FOSSIL_CANYON,
         TRACK_JUNGLE_FALLS,
         TRACK_HOT_TOP_VOLCANO,
