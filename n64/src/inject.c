@@ -13,6 +13,90 @@ bool init = false;
 bool show_version = false;
 bool show_credits1 = false;
 bool show_credits2 = false;
+bool kart_change = false;
+
+void show_vehicle()
+{
+  if(change_timer == 0)
+  {
+    cart_t *player_kart = (cart_t*) player_kart_ptr;
+    u32 property_ptr = (u32) player_kart->properties_ptr;
+    property_ptr = property_ptr + 0x01F7;
+    (*(u8*)property_ptr) = 0xFF;
+    kart_change = false;
+  }
+}
+
+void watch_buttons()
+{
+  if(controller->held.dleft && dpad_pressed == false){
+    if(player_kart_ptr != 0x0)
+    {
+      dkr_fn_overworld_transform_racer(player_kart_ptr, PLANE);
+      kart_change = true;
+    }
+    dpad_pressed = true;
+  }
+  // if(controller->held.dright && dpad_pressed == false){
+  //     //NOTE!!!!
+  //   //While in TT Cutscene, don't give items to the cart.
+  //   if(player_kart_ptr != 0x0)
+  //   {
+  //     cart_t *player_kart = (cart_t*) player_kart_ptr;
+  //     player_kart->weapon_type = BALLOON_SPEED;
+  //     player_kart->weapon_upgrade = 0x02;
+  //     player_kart->weapon_amount = 0xA;
+  //   }
+  //   // if(player_kart_ptr != 0x0)
+  //   // {
+  //   //   cart_t *player_kart = (cart_t*) player_kart_ptr;
+  //     // if((u32) racers->kart_racer_1_ptr != 0x0)
+  //     // {
+  //     //   racers->kart_racer_1_ptr->damaged = BUBBLED;
+  //     // }
+  //     // if((u32) racers->kart_racer_2_ptr != 0x0)
+  //     // {
+  //     //   racers->kart_racer_2_ptr->damaged = BUBBLED;
+  //     // }
+  //     // if((u32) racers->kart_racer_3_ptr != 0x0)
+  //     // {
+  //     //   racers->kart_racer_3_ptr->damaged = BUBBLED;
+  //     // }
+  //     // if((u32) racers->kart_racer_4_ptr != 0x0)
+  //     // {
+  //     //   racers->kart_racer_4_ptr->damaged = BUBBLED;
+  //     // }
+  //     // if((u32) racers->kart_racer_5_ptr != 0x0)
+  //     // {
+  //     //   racers->kart_racer_5_ptr->damaged = BUBBLED;
+  //     // }
+  //     // if((u32) racers->kart_racer_6_ptr != 0x0)
+  //     // {
+  //     //   racers->kart_racer_6_ptr->damaged = BUBBLED;
+  //     // }
+  //     // if((u32) racers->kart_racer_7_ptr != 0x0)
+  //     // {
+  //     //   racers->kart_racer_7_ptr->damaged = BUBBLED;
+  //     // }
+
+  //     // player_kart->weapon_type = BALLOON_MISSLE;
+  //     // player_kart->weapon_upgrade = 0x02;
+  //     // player_kart->weapon_amount = 0xA;
+  //     //player_kart->damaged = SUPERFLIP;
+  //   //}
+  //   dpad_pressed = true;
+  // }
+  else {
+    if(dpad_pressed)
+    {
+      dpad_pressed = false;
+    }
+    if(kart_change)
+    {
+      show_vehicle();
+    }
+  }
+}
 
 void character_rando()
 {
@@ -30,6 +114,19 @@ bool pre_loop()
     ap_memory.pc.settings.setting_tt_amulet_pieces = 4; //set back to 4 when releasing
     ap_memory.pc.settings.setting_wizpig2_balloons = 47; //set back to 47 when releasing
     ap_memory.pc.settings.setting_wizpig_amulet_pieces = 4; //set back to 4 when releasing
+    ap_memory.pc.settings.setting_shuffle_door_requirements = 1;
+    // ap_memory.pc.settings.setting_random_cart = 1;
+    ap_memory.pc.settings.setting_open_worlds = 1;
+    // ap_memory.pc.settings.setting_shuffle_tt_amulet = 0;
+    // ap_memory.pc.settings.setting_change_balloons = 1;
+    // ap_memory.pc.settings.setting_balloon_type = 5;
+
+    // ap_memory.pc.settings.setting_shuffle_vehicles = 1;
+    // ap_memory.pc.settings.setting_sv_including_overworld = 1;
+    // ap_memory.pc.items[AP_FIRE_MOUNTAIN_KEY] = 1;
+    // ap_memory.pc.items[AP_ICICLE_PYRAMID_KEY] = 1;
+    // ap_memory.pc.items[AP_DARKWATER_BEACH_KEY] = 1;
+    // ap_memory.pc.items[AP_SMOKEY_CASTLE_KEY] = 1;
     init = true;
   }
   if(dkr_ingame_timer >= 0x00000020 && dkr_ingame_timer <= 0x00000030 && !show_version)
@@ -90,6 +187,7 @@ bool pre_loop()
 
   deInitializeAPBalloons();
   deInitializeAPSilverCoins();
+  watch_buttons();
   overworldTransformAllowed();
   overworldTranformFix();
   return false;

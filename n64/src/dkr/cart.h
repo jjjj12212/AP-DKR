@@ -36,7 +36,7 @@
         u32 _empty5;
 //4
         u32 _unknown_pointer4;
-        u32 _unknown_pointer5;
+        u32 properties_ptr;
         u32 _unknown_pointer6;
         u32 _unknown_pointer7;
         u32 _empty6;
@@ -159,5 +159,6 @@
     } kart_type;
 
     #define racers ((racers_ptrs_t *) 0x801EFF94)
-    
+
+    #define change_timer (*(u8*)0x8011AD44)
 #endif
