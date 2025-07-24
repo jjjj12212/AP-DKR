@@ -100,7 +100,25 @@ void watch_buttons()
 
 void character_rando()
 {
-  counter +=1;
+  if(ap_memory.pc.settings.setting_random_cart == 2)
+  {
+    switch(dkr_current_map){
+      case MAP_OVERWORLD:
+      case MAP_DINO_DOMAIN:
+      case MAP_SNOWFLAKE_MOUNTAIN:
+      case MAP_SHERBET_ISLAND:
+      case MAP_DRAGON_FOREST:
+      case MAP_FUTURE_FUN:
+        counter +=1;
+        break;
+      default:
+        break;
+    }
+  }
+  else
+  {
+      counter +=1;
+  }
   if(counter >= 0xA) counter = 0x0;
   character = counter;
 }
