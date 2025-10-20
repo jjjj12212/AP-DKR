@@ -57,5 +57,10 @@ typedef u32 (*dkr_fnt_transform_racer)(u8 vehicle_type, u8 _zero, u8 _zero2, u32
 typedef void (*dkr_fnt_overworld_transform_racer)(u32 ptr, u8 vehicle_type);
 #define dkr_fn_overworld_transform_racer ((dkr_fnt_overworld_transform_racer)0x8000E1EC)
 
+typedef void (*dkr_fnt_unkownfunc)(u32 unkown);
+#define dkr_fn_unkownfunc ((dkr_fnt_unkownfunc)0x8006DB20)
+
+typedef void (*dkr_fnt_unkownfunc2)();
+#define dkr_fn_unkownfunc2 ((dkr_fnt_unkownfunc2)0x8000E4C8)
 
 #endif

@@ -58,7 +58,7 @@
 
     #define dkr_current_map (*(u8*)0x801234F7) 
     #define dkr_progression (*(progression_t*) 0x801FC9E3)
-
+    #define dkr_saveflag_map (*(u8*)0x801FCA19)
 
 
 #endif

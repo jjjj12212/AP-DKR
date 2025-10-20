@@ -16,6 +16,8 @@ enum UTIL_INJECT {
 };
 
 void util_inject(enum UTIL_INJECT type, u32 addr, u32 data, u8 addNOP);
+void csrand(u32 seed);
+u32 crand();
 
 #define TICKS_PER_MILLISECOND (93750000/2/1000)
 

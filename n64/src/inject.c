@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "dkr.h"
 #include "dialog.h"
 #include "ap.h"
@@ -13,6 +14,7 @@ bool init = false;
 bool show_version = false;
 bool show_credits1 = false;
 bool show_credits2 = false;
+u8 check_actual_track = 0;
 
 void character_rando()
 {
@@ -43,6 +45,7 @@ bool pre_loop()
 {
   if(!init)
   {
+    csrand(12212);
     ap_memory.pc.settings.setting_boss1_regional_balloons = 4; //set back to 4 when releasing
     ap_memory.pc.settings.setting_boss2_regional_balloons = 8; // set back to 8 when releasing
     ap_memory.pc.settings.setting_tt_amulet_pieces = 4; //set back to 4 when releasing
@@ -50,6 +53,7 @@ bool pre_loop()
     ap_memory.pc.settings.setting_wizpig_amulet_pieces = 4; //set back to 4 when releasing
     init = true;
   }
+  crand();
   if(dkr_ingame_timer >= 0x00000020 && dkr_ingame_timer <= 0x00000030 && !show_version)
   {
     showVersion();
@@ -73,7 +77,7 @@ bool pre_loop()
       || dkr_unknown_address1 == 0x028C || dkr_unknown_address1 == 0x028C || dkr_unknown_address1 == 0x0285
       || dkr_unknown_address1 == 0x027F || dkr_unknown_address1 == 0x0288 || dkr_unknown_address1 == 0x0291
     ) 
-     dkr_intro_cutscene_skip_flag = 0x01;
+    dkr_intro_cutscene_skip_flag = 0x01;
   }
   //EO INTRO CUTSCENE SKIP
 
@@ -115,22 +119,45 @@ bool pre_loop()
 
 void checkKeySpawn(u32 *obj_pointer, u32 data_pointer, u8 zero, u8 id)
 {
-  if(ap_memory.pc.n64_keys_location.dino_key && dkr_current_map == MAP_ANCIENT_LAKE)
-  {
-    dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
-  }
-  if(ap_memory.pc.n64_keys_location.snowflake_key && dkr_current_map == MAP_SNOWBALL_VALLEY)
-  {
-    dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
-  }
-  if(ap_memory.pc.n64_keys_location.island_key && dkr_current_map == MAP_CRESCENT_ISLAND)
-  {
-    dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
-  }
-  if(ap_memory.pc.n64_keys_location.dragon_key && dkr_current_map == MAP_BOULDER_CANYON)
-  {
-    dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
-  }
+   if(ap_memory.pc.settings.setting_shuffle_tracks)
+    {
+      if(ap_memory.pc.n64_keys_location.dino_key && check_actual_track == MAP_ANCIENT_LAKE)
+      {
+        dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
+      }
+      if(ap_memory.pc.n64_keys_location.snowflake_key && check_actual_track == MAP_SNOWBALL_VALLEY)
+      {
+        dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
+      }
+      if(ap_memory.pc.n64_keys_location.island_key && check_actual_track == MAP_CRESCENT_ISLAND)
+      {
+        dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
+      }
+      if(ap_memory.pc.n64_keys_location.dragon_key && check_actual_track == MAP_BOULDER_CANYON)
+      {
+        dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
+      }
+    }
+    else
+    {
+      if(ap_memory.pc.n64_keys_location.dino_key && dkr_current_map == MAP_ANCIENT_LAKE)
+      {
+        dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
+      }
+      if(ap_memory.pc.n64_keys_location.snowflake_key && dkr_current_map == MAP_SNOWBALL_VALLEY)
+      {
+        dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
+      }
+      if(ap_memory.pc.n64_keys_location.island_key && dkr_current_map == MAP_CRESCENT_ISLAND)
+      {
+        dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
+      }
+      if(ap_memory.pc.n64_keys_location.dragon_key && dkr_current_map == MAP_BOULDER_CANYON)
+      {
+        dkr_fn_dont_spawn_key((u32) obj_pointer, data_pointer, zero, id);
+      }
+    }
+  
 }
 
 void collectKeyLocation(u32 *obj_pointer, u32 data_pointer, u8 zero, u8 id)
@@ -192,9 +219,15 @@ void balloonOverrides(u32 *obj_pointer, u32 data_pointer, u8 zero, u16 id)
   {
     if(ap_memory.pc.settings.setting_change_balloons)
     {
+      if(ap_memory.pc.settings.setting_balloon_type == 0x07)
+      {
+        setCBalloonTotals(dkr_current_map);
+        setCBalloonCounter();
+      }
       changeWeaponBalloons((balloon_t*)obj_pointer, id);
     }
-    initializeAPBalloons((balloon_t*)obj_pointer, id);
+    initializeAPBalloons((balloon_t*)obj_pointer, id); 
+    //todo pos 10 = boulder canyon, change
   }
 }
 
@@ -226,8 +259,23 @@ u32 transformRacer(u8 vehicle_type, u8 _zero, u8 _zero2, u32 ptr)
 {
   if(ap_memory.pc.settings.setting_shuffle_vehicles)
   {
-    u8 vt = transformationMap();
-    return dkr_fn_transform_racer(vt, _zero, _zero2, ptr);
+    if(ap_memory.pc.settings.setting_shuffle_tracks)
+    {
+      if(dkr_current_map == MAP_ICE_PYRAMID || dkr_current_map == MAP_SMOKEY_CASTLE)
+      {
+        return dkr_fn_transform_racer(vehicle_type, _zero, _zero2, ptr);
+      }
+      else
+      {
+        u8 vt = transformationMap(check_actual_track);
+        return dkr_fn_transform_racer(vt, _zero, _zero2, ptr);
+      }
+    }
+    else
+    {
+      u8 vt = transformationMap(dkr_current_map);
+      return dkr_fn_transform_racer(vt, _zero, _zero2, ptr);
+    }
   }
   else
   {
@@ -241,18 +289,25 @@ void overworldTransformRacer( u32 ptr, u8 vehicle_type)
   return dkr_fn_overworld_transform_racer(ptr, vehicle_type);
 }
 
-void setRacetrack(u8 race_id)
+void setRacetrack(u8 race_id, u32 unknown_1, u32 unknown_2, u32 unknown_3)
 {
-  u8 check_actual_track = shuffleTrack(race_id);
+  check_actual_track = shuffleTrack(race_id);
   if(check_actual_track == 0)
   {
     dkr_adv2 = ap_memory.pc.mirror_current_race;
-    return dkr_fn_race_course(race_id);
+    util_inject(UTIL_INJECT_RAW, 0x8006B87C, 0xA06F0049, 0);
+    util_inject(UTIL_INJECT_RAW, 0x8006BB98, 0xA0580049, 0);
+    return dkr_fn_race_course(race_id, unknown_1, unknown_2, unknown_3);
   }
   else
   {
+    dkr_current_map = check_actual_track;
     dkr_adv2 = ap_memory.pc.mirror_current_race;
-    return dkr_fn_race_course(check_actual_track);
+    util_inject(UTIL_INJECT_RAW, 0x8006B87C, 0, 0);
+    util_inject(UTIL_INJECT_RAW, 0x8006BB98, 0, 0);
+    dkr_saveflag_map = race_id;
+    dkr_fn_race_course(check_actual_track, unknown_1, unknown_2, unknown_3);
+    dkr_saveflag_map = race_id;
   }
 }
 
@@ -269,6 +324,54 @@ void setRaceMusic(u8 music_id)
   }
 }
 
+u8 opponent_vehicles()
+{
+  if(!ap_memory.pc.settings.setting_shuffle_tracks)
+  {
+    shuffleEnemies(dkr_current_map);
+    return racer_karts;
+  }
+  else
+  {
+    shuffleEnemies(check_actual_track);
+    return racer_karts;
+  }
+}
+
+u8 setRacetrackReplayVideo(u8 race_id)
+{
+  check_actual_track = shuffleTrack(race_id);
+  if(check_actual_track == 0)
+  {
+    dkr_fn_race_replay(race_id);
+    return race_id;
+  }
+  dkr_fn_race_replay(check_actual_track);
+  dkr_saveflag_map = race_id;
+  return race_id;
+}
+
+void fixCoinRaces(u32 _unkown)
+{
+  if(!ap_memory.pc.settings.setting_shuffle_tracks)
+  {
+    return dkr_fn_unkownfunc(_unkown);
+  }
+  //util_inject(UTIL_INJECT_RAW, 0x8006BB8C, 0, 0); //coin fix?
+  CoinFix(dkr_saveflag_map);
+  return dkr_fn_unkownfunc(_unkown);
+}
+
+void fixCoinRaces2()
+{
+  if(!ap_memory.pc.settings.setting_shuffle_tracks)
+  {
+    return dkr_fn_unkownfunc2();
+  }
+  CoinFix(dkr_saveflag_map);
+  return dkr_fn_unkownfunc2();
+}
+
 u32 inject_hooks() {
   AP_MEMORY_PTR = &ap_memory;
   util_inject(UTIL_INJECT_FUNCTION, 0x80400048, (u32)pre_loop, 1);
@@ -281,13 +384,18 @@ u32 inject_hooks() {
   util_inject(UTIL_INJECT_FUNCTION, 0x80024BD4, (u32)transformRacer, 0); 
   util_inject(UTIL_INJECT_FUNCTION, 0x80039EA8, (u32)overworldTransformRacer, 0); 
 
-  util_inject(UTIL_INJECT_FUNCTION, 0x8006CBA8, (u32)setRacetrack, 0); 
+
+  util_inject(UTIL_INJECT_FUNCTION, 0x8006E1F4, (u32)setRacetrack, 0);
+  util_inject(UTIL_INJECT_FUNCTION, 0x800936AC, (u32)fixCoinRaces2, 0);
+  util_inject(UTIL_INJECT_FUNCTION, 0x80092E50, (u32)setRacetrackReplayVideo, 0); //Breaks Bosses?
   util_inject(UTIL_INJECT_FUNCTION, 0x8006BD4C, (u32)setRaceMusic, 0);
 
   util_inject(UTIL_INJECT_RAW, 0x8001A788, 0, 0); //No balloon from winning races
   util_inject(UTIL_INJECT_RAW, 0x8003B670, 0, 0); //No balloon from collecting in overworld
   util_inject(UTIL_INJECT_RAW, 0x8005A418, 0, 0); //Head Spins if above is in place (checksum??)
   util_inject(UTIL_INJECT_RAW, 0x8003DF9C, 0, 0); //don't add key to mem
+
+  util_inject(UTIL_INJECT_FUNCTION, 0x8000D5A4, (u32)opponent_vehicles, 0);
 
   return 0;
 }

@@ -43,6 +43,11 @@ int main() {
   printf("      POWER_UP_BALLOON_TYPE = 0x%X,\n",             calc(mem.pc.settings, mem.pc.settings.setting_balloon_type));
   printf("      SHUFFLE_VEHICLES = 0x%X,\n",                  calc(mem.pc.settings, mem.pc.settings.setting_shuffle_vehicles));
   printf("      SHUFFLE_VEHICLES_INCLUDING_OVERWORLD = 0x%X,\n",    calc(mem.pc.settings, mem.pc.settings.setting_sv_including_overworld));
+  printf("      BOULDER_CANYON_BELL_BALLOON = 0x%X,\n",       calc(mem.pc.settings, mem.pc.settings.setting_bridge_balloon));
+  printf("      SHUFFLE_TRACKS = 0x%X,\n",                    calc(mem.pc.settings, mem.pc.settings.setting_shuffle_tracks));
+  printf("      SHUFFLE_OPPONENT_KARTS = 0x%X,\n",            calc(mem.pc.settings, mem.pc.settings.setting_shuffle_opponent_karts));
+
+
   printf("    N64_PROCESSED_MESSAGE_COUNT = 0x%X,\n",         calc(mem, mem.pc.n64_text_queue));
   printf("    N64_KEYS_LOCATION = 0x%X,\n",                   calc(mem, mem.pc.n64_keys_location));
   printf("    N64_BALLOON_LOCATIONS = 0x%X,\n",               calc(mem, mem.pc.n64_balloons));

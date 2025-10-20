@@ -32,3 +32,17 @@ void util_inject(enum UTIL_INJECT type, u32 addr, u32 data, u8 addNOP) {
     if (addNOP) (*(vu32*)(addr + 4)) = 0;
   }
 }
+
+u32 util_rand_state = 1;
+
+void csrand(u32 seed) {
+  util_rand_state = seed ? seed : 1;
+}
+
+u32 crand() {
+  u32 x = util_rand_state;
+  x ^= x << 13;
+  x ^= x >> 7;
+  x ^= x << 5;
+  return util_rand_state = x;
+}

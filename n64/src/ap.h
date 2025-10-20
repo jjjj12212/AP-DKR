@@ -22,6 +22,9 @@
     void initializeAPBalloons(balloon_t *obj_pointer, u16 balloon_id);
     void deInitializeAPBalloons();
     void watchCollectedBalloons();
+    void inLevelBalloonShuffle(balloon_t *obj_pointer);
+    void setCBalloonTotals(u8 map);
+    void setCBalloonCounter();
 
     //Silver Coin Locations
     void initializeAPSilverCoins(silvercoin_t *obj_pointer, u16 scoin_id);
@@ -31,7 +34,7 @@
 
     //Vehicle Shuffle
     void overworldTransformAllowed();
-    u8 transformationMap();
+    u8 transformationMap(u8 track_map_id);
     u8 shuffleOrderPHC();
     u8 shuffleOrderHPC();
     u8 shuffleOrderCPH();
@@ -42,8 +45,13 @@
 
     //randomize tracks
     u8 shuffleTrack(u8 race_id);
+    u8 checkShuffleTrack(u8 race_id);
     u8 shuffleMusic();
     u8 trackMapConvert(u8 track_map_id);
     u8 trackMusicConvert(u8 track_map_id);
+    void CoinFix(u8 track_map_id);
 
+
+    //Shuffle enemies
+    void shuffleEnemies(u8 race_id);
 #endif

@@ -6,7 +6,6 @@ bool process_text = false;
 u16 timer_check = 0x0000;
 u8 bcounter = 0;
 u8 bbcounter = 0;
-u8 overworld_cart = 0;
 
 void changeLevelDoorCost(level_doors_t *obj_pointer)
 {
@@ -937,6 +936,33 @@ void changeWeaponBalloons(balloon_t *obj_pointer, u16 balloon_id)
             obj_pointer->balloon_property = BALLOON_MAGNET;
             obj_pointer->graphic = BALLOON_MAGNET;
         }
+        else if(ap_memory.pc.settings.setting_balloon_type == 0x07)
+        {
+            inLevelBalloonShuffle(obj_pointer);
+        }
+        else if(ap_memory.pc.settings.setting_balloon_type == 0x08)
+        {
+            int val = crand() % (4 + 1);
+            obj_pointer->balloon_property = (u8)val;
+            obj_pointer->graphic = (u8)val;
+        }
+
+        if(ap_memory.pc.settings.setting_bridge_balloon && dkr_current_map == MAP_BOULDER_CANYON) // Boulder Canyon Bell Balloon
+        {
+            if(ap_memory.pc.settings.setting_open_worlds == false && ap_memory.pc.settings.setting_shuffle_door_requirements == false)
+            {
+                if(balloon_id == 0x00B9)
+                {
+                    obj_pointer->balloon_property = BALLOON_SPEED;
+                    obj_pointer->graphic = BALLOON_SPEED;
+                }
+            }
+            else if(balloon_id == 0x00BB)
+            {
+                obj_pointer->balloon_property = BALLOON_SPEED;
+                obj_pointer->graphic = BALLOON_SPEED;
+            }
+        }
     }
 }
 
@@ -948,6 +974,14 @@ void initializeAPBalloons(balloon_t *obj_pointer, u16 balloon_id)
         {
             if(!checkBalloonPtr(ap_memory.pc.n64_balloons[i].balloon_ptrs))
             {
+                // if(ap_memory.pc.settings.setting_shuffle_tracks)
+                // {
+                //     ap_memory.pc.balloons_map = checkShuffleTrack(dkr_current_map);
+                // }
+                // else
+                // {
+                //    ap_memory.pc.balloons_map = dkr_current_map;
+                // }
                 ap_memory.pc.balloons_map = dkr_current_map;
                 ap_memory.pc.n64_balloons[i].balloon_ptrs = obj_pointer;
                 ap_memory.pc.n64_balloons[i].balloon_id = balloon_id;
@@ -1030,6 +1064,21 @@ void changeWeaponBalloonsDynamic()
 {
     for(int i = 0; i < 64; i++)
     {
+        if(ap_memory.pc.settings.setting_bridge_balloon && dkr_current_map == MAP_BOULDER_CANYON)
+        //todo if i == 10,
+        {
+            if(ap_memory.pc.settings.setting_open_worlds == false && ap_memory.pc.settings.setting_shuffle_door_requirements == false)
+            {
+                if(ap_memory.pc.n64_balloons[i].balloon_id == 0x00B9)
+                {
+                    continue;
+                }
+            }
+            else if(ap_memory.pc.n64_balloons[i].balloon_id == 0x00BB)
+            {
+                continue;
+            }
+        }
         if(checkBalloonPtr(ap_memory.pc.n64_balloons[i].balloon_ptrs))
         {
             if(ap_memory.pc.settings.setting_balloon_type == 0x05)
@@ -1045,6 +1094,233 @@ void changeWeaponBalloonsDynamic()
     }
 }
 
+void setCBalloonTotals(u8 map)
+{
+    switch (map)
+    {
+    case MAP_ANCIENT_LAKE:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_DD_AL_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_DD_AL_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_DD_AL_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_DD_AL_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_DD_AL_W;
+        break;
+    case MAP_FOSSIL_CANYON:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_DD_FC_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_DD_FC_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_DD_FC_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_DD_FC_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_DD_FC_W;
+        break;
+    case MAP_JUNGLE_FALLS:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_DD_JF_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_DD_JF_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_DD_JF_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_DD_JF_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_DD_JF_W;
+        break;
+    case MAP_HOT_TOP_VOLC:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_DD_HV_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_DD_HV_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_DD_HV_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_DD_HV_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_DD_HV_W;
+        break;
+
+    case MAP_EVERFROST_PEAK:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_SM_EP_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_SM_EP_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_SM_EP_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_SM_EP_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_SM_EP_W;
+        break;
+    case MAP_WALRUS_COVE:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_SM_WC_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_SM_WC_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_SM_WC_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_SM_WC_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_SM_WC_W;
+        break;
+    case MAP_SNOWBALL_VALLEY:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_SM_SV_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_SM_SV_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_SM_SV_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_SM_SV_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_SM_SV_W;
+        break;
+    case MAP_FROSTY_VILLAGE:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_SM_FV_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_SM_FV_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_SM_FV_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_SM_FV_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_SM_FV_W;
+        break;
+
+    case MAP_WHALE_BAY:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_SI_WB_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_SI_WB_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_SI_WB_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_SI_WB_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_SI_WB_W;
+        break;
+    case MAP_CRESCENT_ISLAND:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_SI_CI_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_SI_CI_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_SI_CI_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_SI_CI_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_SI_CI_W;
+        break;
+    case MAP_PIRATE_LAGOON:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_SI_PL_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_SI_PL_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_SI_PL_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_SI_PL_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_SI_PL_W;
+        break;
+    case MAP_TREASURE_CAVES:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_SI_TC_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_SI_TC_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_SI_TC_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_SI_TC_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_SI_TC_W;
+        break;
+
+    case MAP_WINDMILL_PLAINS:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_DF_WP_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_DF_WP_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_DF_WP_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_DF_WP_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_DF_WP_W;
+        break;
+    case MAP_GREENWOOD_VILLAGE:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_DF_GV_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_DF_GV_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_DF_GV_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_DF_GV_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_DF_GV_W;
+        break;
+    case MAP_BOULDER_CANYON:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_DF_BC_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_DF_BC_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_DF_BC_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_DF_BC_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_DF_BC_W;
+        break;
+    case MAP_HAUNTED_WOODS:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_DF_HW_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_DF_HW_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_DF_HW_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_DF_HW_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_DF_HW_W;
+        break;
+
+    case MAP_SPACEDUST_ALLEY:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_FL_SA_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_FL_SA_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_FL_SA_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_FL_SA_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_FL_SA_W;
+        break;
+    case MAP_DARKMOON_CAVERNS:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_FL_DC_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_FL_DC_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_FL_DC_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_FL_DC_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_FL_DC_W;
+        break;
+    case MAP_SPACEPORT_ALPHA:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_FL_SAA_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_FL_SAA_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_FL_SAA_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_FL_SAA_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_FL_SAA_W;
+        break;
+    case MAP_STAR_CITY:
+        ap_memory.pc.total_balloon_colour_map.red = BALLOON_FL_SC_R;
+        ap_memory.pc.total_balloon_colour_map.green = BALLOON_FL_SC_G;
+        ap_memory.pc.total_balloon_colour_map.blue = BALLOON_FL_SC_B;
+        ap_memory.pc.total_balloon_colour_map.purple = BALLOON_FL_SC_P;
+        ap_memory.pc.total_balloon_colour_map.rainbow = BALLOON_FL_SC_W;
+        break;
+
+    default:
+        break;
+    }
+}
+
+void setCBalloonCounter()
+{
+    u8 total_balloons = ap_memory.pc.balloon_colour_map.blue + ap_memory.pc.balloon_colour_map.green + ap_memory.pc.balloon_colour_map.purple +
+        ap_memory.pc.balloon_colour_map.rainbow + ap_memory.pc.balloon_colour_map.red;
+    if(total_balloons == 0)
+    {
+        ap_memory.pc.balloon_colour_map.red = ap_memory.pc.total_balloon_colour_map.red;
+        ap_memory.pc.balloon_colour_map.green = ap_memory.pc.total_balloon_colour_map.green;
+        ap_memory.pc.balloon_colour_map.blue = ap_memory.pc.total_balloon_colour_map.blue;
+        ap_memory.pc.balloon_colour_map.purple = ap_memory.pc.total_balloon_colour_map.purple;
+        ap_memory.pc.balloon_colour_map.rainbow = ap_memory.pc.total_balloon_colour_map.rainbow;
+    }
+}
+
+void inLevelBalloonShuffle(balloon_t *obj_pointer)
+{
+    bool shuffled = false;
+    while (!shuffled)
+    {
+        int  colour = crand() %(4+1);
+        switch (colour)
+        {
+            case BALLOON_SPEED:
+                if(ap_memory.pc.balloon_colour_map.blue > 0)
+                {
+                    ap_memory.pc.balloon_colour_map.blue--;
+                    obj_pointer->balloon_property = BALLOON_SPEED;
+                    obj_pointer->graphic = BALLOON_SPEED;
+                    shuffled = true;
+                }
+                break;
+            case BALLOON_MISSLE:
+                if(ap_memory.pc.balloon_colour_map.red > 0)
+                {
+                    ap_memory.pc.balloon_colour_map.red--;
+                    obj_pointer->balloon_property = BALLOON_MISSLE;
+                    obj_pointer->graphic = BALLOON_MISSLE;
+                    shuffled = true;
+                }
+                break;
+            case BALLOON_SLIP:
+                if(ap_memory.pc.balloon_colour_map.green > 0)
+                {
+                    ap_memory.pc.balloon_colour_map.green--;
+                    obj_pointer->balloon_property = BALLOON_SLIP;
+                    obj_pointer->graphic = BALLOON_SLIP;
+                    shuffled = true;
+                }
+                break;
+            case BALLOON_SHIELD:
+                if(ap_memory.pc.balloon_colour_map.purple > 0)
+                {
+                    ap_memory.pc.balloon_colour_map.purple--;
+                    obj_pointer->balloon_property = BALLOON_SHIELD;
+                    obj_pointer->graphic = BALLOON_SHIELD;
+                    shuffled = true;
+                }
+                break;
+            case BALLOON_MAGNET:
+                if(ap_memory.pc.balloon_colour_map.rainbow > 0)
+                {
+                    ap_memory.pc.balloon_colour_map.rainbow--;
+                    obj_pointer->balloon_property = BALLOON_MAGNET;
+                    obj_pointer->graphic = BALLOON_MAGNET;
+                    shuffled = true;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    
+}
 void initializeAPSilverCoins(silvercoin_t *obj_pointer, u16 scoin_id)
 {
     if(obj_pointer->parent_obj_pointer->object_type == SILVER_COIN && obj_pointer->parent_obj_pointer->object_id == SILVER_COINID)
@@ -1233,9 +1509,9 @@ void overworldTransformAllowed()
     }
 }
 
-u8 transformationMap()
+u8 transformationMap(u8 track_map_id)
 {
-    switch(dkr_current_map)
+    switch(track_map_id)
     {
         case MAP_HOT_TOP_VOLC:
         case MAP_FIRE_MOUNTAIN: //no effect
@@ -1266,6 +1542,8 @@ u8 transformationMap()
         case MAP_DARKWATER_BEACH: // no effect
         case MAP_BOULDER_CANYON:
             return shuffleOrderHPC();
+        case MAP_OVERWORLD:
+            return overworld_saved_transformation;
         default:
             return 0x0;
     }
@@ -1327,14 +1605,14 @@ u8 shuffleOrderCHP()
 
 void storeVehicle(u8 vehicle)
 {
-    overworld_cart = vehicle;
+    ap_memory.pc.overworld_cart = vehicle;
 }
 
 void overworldTranformFix()
 {
-    if(overworld_saved_transformation != overworld_cart)
+    if(overworld_saved_transformation != ap_memory.pc.overworld_cart)
     {
-        overworld_saved_transformation = overworld_cart;
+        overworld_saved_transformation = ap_memory.pc.overworld_cart;
     }
 }
 
@@ -1411,6 +1689,60 @@ u8 shuffleTrack(u8 race_id)
         return 0;
     }
     ap_memory.pc.mirror_current_race = 0;
+    return 0;
+}
+
+u8 checkShuffleTrack(u8 race_id)
+{
+    switch (race_id)
+    {
+    case MAP_ANCIENT_LAKE:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_ANCIENT_LAKE].actual_track);
+    case MAP_FOSSIL_CANYON:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_FOSSIL_CANYON].actual_track);
+    case MAP_JUNGLE_FALLS:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_JUNGLE_FALLS].actual_track);
+    case MAP_HOT_TOP_VOLC:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_HOT_TOP_VOLCANO].actual_track);
+
+    case MAP_EVERFROST_PEAK:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_EVERFROST_PEAK].actual_track);
+    case MAP_WALRUS_COVE:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_WALRUS_COVE].actual_track);
+    case MAP_SNOWBALL_VALLEY:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_SNOWBALL_VALLEY].actual_track);
+    case MAP_FROSTY_VILLAGE:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_FROSTY_VILLAGE].actual_track);  
+
+    case MAP_WHALE_BAY:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_WHALE_BAY].actual_track);
+    case MAP_CRESCENT_ISLAND:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_CRESCENT_ISLAND].actual_track);
+    case MAP_PIRATE_LAGOON:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_PIRATE_LAGOON].actual_track);
+    case MAP_TREASURE_CAVES:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_TREASURE_CAVES].actual_track);   
+
+    case MAP_WINDMILL_PLAINS:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_WINDMILL_PLAINS].actual_track);
+    case MAP_GREENWOOD_VILLAGE:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_GREENWOOD_VILLAGE].actual_track);
+    case MAP_BOULDER_CANYON:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_BOULDER_CANYON].actual_track);
+    case MAP_HAUNTED_WOODS:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_HAUNTED_WOODS].actual_track);   
+
+    case MAP_SPACEDUST_ALLEY:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_SPACEDUST_VALLEY].actual_track);
+    case MAP_DARKMOON_CAVERNS:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_DARKMOON_CAVERNS].actual_track);
+    case MAP_SPACEPORT_ALPHA:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_SPACEPORT_ALPHA].actual_track);
+    case MAP_STAR_CITY:
+        return trackMapConvert(ap_memory.pc.tracks[TRACK_STAR_CITY].actual_track);  
+    default:
+        return 0;
+    }
     return 0;
 }
 
@@ -1574,4 +1906,269 @@ u8 trackMusicConvert(u8 track_map_id)
         return 0;
     }
     return 0;
+}
+
+void shuffleEnemies(u8 race_id)
+{
+    switch (race_id)
+    {
+    case MAP_ANCIENT_LAKE:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x03)
+            {
+                racer_karts = 0;
+            }
+            return;
+        }
+        racer_karts = 0;
+        break;
+    case MAP_FOSSIL_CANYON:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x03)
+            {
+                racer_karts = 0;
+            }
+            return;
+        }
+        racer_karts = 0;
+        break;
+    case MAP_JUNGLE_FALLS:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x03)
+            {
+                racer_karts = 0;
+            }
+            return;
+        }
+        racer_karts = 0;
+        break;
+    case MAP_HOT_TOP_VOLC:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x03)
+            {
+                racer_karts = 0x01;
+            }
+            return;
+        }
+        racer_karts = 0x02;
+        break;
+
+    case MAP_EVERFROST_PEAK:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x03)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x02;
+        break;
+    case MAP_WALRUS_COVE:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x02)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x00;
+        break;
+    case MAP_SNOWBALL_VALLEY:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x02)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x00;
+        break;
+    case MAP_FROSTY_VILLAGE:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x03)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x00;
+        break;
+
+    case MAP_WHALE_BAY:
+        racer_karts = 0x01;
+        break;
+    case MAP_CRESCENT_ISLAND:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x02)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x00;
+        break;
+    case MAP_PIRATE_LAGOON:
+        racer_karts = 0x01;
+        break;
+    case MAP_TREASURE_CAVES:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x03)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x00;
+        break;  
+
+    case MAP_WINDMILL_PLAINS:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x03)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x02;
+        break;  
+    case MAP_GREENWOOD_VILLAGE:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x02)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x00;
+        break; 
+    case MAP_BOULDER_CANYON:
+        racer_karts = 0x01;
+        break; 
+    case MAP_HAUNTED_WOODS:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x02)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x00;
+        break; 
+
+    case MAP_SPACEDUST_ALLEY:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x03)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x02;
+        break; 
+    case MAP_DARKMOON_CAVERNS:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x02)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x00;
+        break;
+    case MAP_SPACEPORT_ALPHA:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x03)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x02;
+        break;
+    case MAP_STAR_CITY:
+        if(ap_memory.pc.settings.setting_shuffle_opponent_karts)
+        {
+            racer_karts = racer_karts + 1;
+            if(racer_karts >= 0x03)
+            {
+                racer_karts = 0x00;
+            }
+            return;
+        }
+        racer_karts = 0x00;
+        break;  
+    default:
+        return;
+    }
+}
+
+void CoinFix(u8 track_map_id)
+{
+    switch(track_map_id)
+    {
+        case MAP_HOT_TOP_VOLC:
+        case MAP_ANCIENT_LAKE:
+        case MAP_JUNGLE_FALLS:
+        case MAP_FOSSIL_CANYON:
+           dkr_coin_requirements = 0x01;
+           break;
+        case MAP_FROSTY_VILLAGE:
+        case MAP_SNOWBALL_VALLEY:
+        case MAP_WALRUS_COVE:
+        case MAP_EVERFROST_PEAK:
+           dkr_coin_requirements = 0x03;
+           break;
+        case MAP_CRESCENT_ISLAND:
+        case MAP_TREASURE_CAVES:
+        case MAP_WHALE_BAY:
+        case MAP_PIRATE_LAGOON:
+           dkr_coin_requirements = 0x02;
+           break;
+        case MAP_HAUNTED_WOODS:
+        case MAP_WINDMILL_PLAINS:
+        case MAP_GREENWOOD_VILLAGE:
+        case MAP_BOULDER_CANYON:
+           dkr_coin_requirements = 0x04;
+           break;
+        case MAP_DARKMOON_CAVERNS:
+        case MAP_STAR_CITY:
+        case MAP_SPACEDUST_ALLEY:
+        case MAP_SPACEPORT_ALPHA:
+           dkr_coin_requirements = 0x05;
+           break;
+        default:
+            return;
+    }
 }
