@@ -297,6 +297,9 @@ void setRacetrack(u8 race_id, u32 unknown_1, u32 unknown_2, u32 unknown_3)
     dkr_adv2 = ap_memory.pc.mirror_current_race;
     util_inject(UTIL_INJECT_RAW, 0x8006B87C, 0xA06F0049, 0);
     util_inject(UTIL_INJECT_RAW, 0x8006BB98, 0xA0580049, 0);
+    util_inject(UTIL_INJECT_RAW, 0x8006B870, (u32)0xA0640048, 0);
+    util_inject(UTIL_INJECT_RAW, 0x8006BB8C, (u32)0xA0440048, 0);
+
     return dkr_fn_race_course(race_id, unknown_1, unknown_2, unknown_3);
   }
   else
@@ -309,6 +312,12 @@ void setRacetrack(u8 race_id, u32 unknown_1, u32 unknown_2, u32 unknown_3)
     dkr_fn_race_course(check_actual_track, unknown_1, unknown_2, unknown_3);
     dkr_saveflag_map = race_id;
   }
+}
+
+void trophy_race(u8 map)
+{
+  check_actual_track = map;
+  return dkr_fn_trophy_race(map);
 }
 
 void setRaceMusic(u8 music_id)
@@ -357,7 +366,6 @@ void fixCoinRaces(u32 _unkown)
   {
     return dkr_fn_unkownfunc(_unkown);
   }
-  //util_inject(UTIL_INJECT_RAW, 0x8006BB8C, 0, 0); //coin fix?
   CoinFix(dkr_saveflag_map);
   return dkr_fn_unkownfunc(_unkown);
 }
@@ -396,6 +404,8 @@ u32 inject_hooks() {
   util_inject(UTIL_INJECT_RAW, 0x8003DF9C, 0, 0); //don't add key to mem
 
   util_inject(UTIL_INJECT_FUNCTION, 0x8000D5A4, (u32)opponent_vehicles, 0);
+
+  util_inject(UTIL_INJECT_FUNCTION, 0x8006CB40, (u32)trophy_race, 0);
 
   return 0;
 }

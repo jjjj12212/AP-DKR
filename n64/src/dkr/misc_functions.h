@@ -63,4 +63,7 @@ typedef void (*dkr_fnt_unkownfunc)(u32 unkown);
 typedef void (*dkr_fnt_unkownfunc2)();
 #define dkr_fn_unkownfunc2 ((dkr_fnt_unkownfunc2)0x8000E4C8)
 
+typedef void (*dkr_fnt_trophy_race)(u8 map);
+#define dkr_fn_trophy_race ((dkr_fnt_trophy_race)0x8006CB58)
+
 #endif

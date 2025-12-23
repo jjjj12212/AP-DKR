@@ -677,6 +677,7 @@ void changeBossDoorCost(boss_doors_t *obj_pointer)
 
         if(ap_memory.pc.settings.setting_boss2_regional_balloons < 8)
         {
+            (*(u8*)0x80034FFB) = ap_memory.pc.settings.setting_boss2_regional_balloons; // Trophy Race Fix
             if(dkr_current_map == MAP_DINO_DOMAIN && dkr_beaten_bosses.dino_first_race)
             {
                 obj_pointer->door_cost = ap_memory.pc.settings.setting_boss2_regional_balloons;
@@ -949,7 +950,7 @@ void changeWeaponBalloons(balloon_t *obj_pointer, u16 balloon_id)
 
         if(ap_memory.pc.settings.setting_bridge_balloon && dkr_current_map == MAP_BOULDER_CANYON) // Boulder Canyon Bell Balloon
         {
-            if(ap_memory.pc.settings.setting_open_worlds == false && ap_memory.pc.settings.setting_shuffle_door_requirements == false)
+            if(ap_memory.pc.settings.setting_open_worlds == false)
             {
                 if(balloon_id == 0x00B9)
                 {
@@ -1067,7 +1068,7 @@ void changeWeaponBalloonsDynamic()
         if(ap_memory.pc.settings.setting_bridge_balloon && dkr_current_map == MAP_BOULDER_CANYON)
         //todo if i == 10,
         {
-            if(ap_memory.pc.settings.setting_open_worlds == false && ap_memory.pc.settings.setting_shuffle_door_requirements == false)
+            if(ap_memory.pc.settings.setting_open_worlds == false)
             {
                 if(ap_memory.pc.n64_balloons[i].balloon_id == 0x00B9)
                 {
@@ -2142,32 +2143,42 @@ void CoinFix(u8 track_map_id)
         case MAP_ANCIENT_LAKE:
         case MAP_JUNGLE_FALLS:
         case MAP_FOSSIL_CANYON:
-           dkr_coin_requirements = 0x01;
-           break;
+            util_inject(UTIL_INJECT_RAW, 0x8006B870, (u32)0, 0);
+            util_inject(UTIL_INJECT_RAW, 0x8006BB8C, (u32)0, 0);
+            dkr_coin_requirements = 0x01;
+            break;
         case MAP_FROSTY_VILLAGE:
         case MAP_SNOWBALL_VALLEY:
         case MAP_WALRUS_COVE:
         case MAP_EVERFROST_PEAK:
-           dkr_coin_requirements = 0x03;
-           break;
+            util_inject(UTIL_INJECT_RAW, 0x8006B870, (u32)0, 0);
+            util_inject(UTIL_INJECT_RAW, 0x8006BB8C, (u32)0, 0);
+            dkr_coin_requirements = 0x03;
+            break;
         case MAP_CRESCENT_ISLAND:
         case MAP_TREASURE_CAVES:
         case MAP_WHALE_BAY:
         case MAP_PIRATE_LAGOON:
-           dkr_coin_requirements = 0x02;
-           break;
+            util_inject(UTIL_INJECT_RAW, 0x8006B870, (u32)0, 0);
+            util_inject(UTIL_INJECT_RAW, 0x8006BB8C, (u32)0, 0);
+            dkr_coin_requirements = 0x02;
+            break;
         case MAP_HAUNTED_WOODS:
         case MAP_WINDMILL_PLAINS:
         case MAP_GREENWOOD_VILLAGE:
         case MAP_BOULDER_CANYON:
-           dkr_coin_requirements = 0x04;
-           break;
+            util_inject(UTIL_INJECT_RAW, 0x8006B870, (u32)0, 0);
+            util_inject(UTIL_INJECT_RAW, 0x8006BB8C, (u32)0, 0);
+            dkr_coin_requirements = 0x04;
+            break;
         case MAP_DARKMOON_CAVERNS:
         case MAP_STAR_CITY:
         case MAP_SPACEDUST_ALLEY:
         case MAP_SPACEPORT_ALPHA:
-           dkr_coin_requirements = 0x05;
-           break;
+            util_inject(UTIL_INJECT_RAW, 0x8006B870, (u32)0, 0);
+            util_inject(UTIL_INJECT_RAW, 0x8006BB8C, (u32)0, 0);
+            dkr_coin_requirements = 0x05;
+            break;
         default:
             return;
     }

@@ -3,7 +3,7 @@
 
 #define AP_VERSION_MAJOR 1
 #define AP_VERSION_MINOR 1
-#define AP_VERSION_PATCH 2
+#define AP_VERSION_PATCH 1
 
 #include <stdint.h>
 #include <stdbool.h>
